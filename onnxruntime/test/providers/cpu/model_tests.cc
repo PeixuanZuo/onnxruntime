@@ -1005,7 +1005,17 @@ TEST_P(ModelTest, Run) {
       ORT_TSTR("Candy"),
       ORT_TSTR("SSD"),
       ORT_TSTR("ResNet101_DUC_HDC-12"),
-      ORT_TSTR("YOLOv3-12")};
+      ORT_TSTR("YOLOv3-12"),
+      // pending opset 18 support
+      ORT_TSTR("test_center_crop_pad_crop_axes_chw"),
+      ORT_TSTR("test_center_crop_pad_crop_axes_chw_expanded"),
+      ORT_TSTR("test_center_crop_pad_crop_axes_hwc"),
+      ORT_TSTR("test_center_crop_pad_crop_axes_hwc_expanded"),
+      ORT_TSTR("test_group_normalization_epsilon"),
+      ORT_TSTR("test_group_normalization_example"),
+      ORT_TSTR("test_layer_normalization_2d_axis1_expanded_ver18"),
+      ORT_TSTR("test_layer_normalization_2d_axis_negative_1_expanded_ver18"),
+      ORT_TSTR("test_layer_normalization_3d_axis1_epsilon_expanded_ver18")};
   static const ORTCHAR_T* dml_disabled_tests[] = {ORT_TSTR("mlperf_ssd_resnet34_1200"),
                                                   ORT_TSTR("mlperf_ssd_mobilenet_300"),
                                                   ORT_TSTR("mask_rcnn"),
