@@ -7,7 +7,10 @@
 #include <string>
 
 #ifndef SHARED_PROVIDER
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #include "onnx/onnx_pb.h"
+#pragma GCC diagnostic pop
 #endif
 
 #include "core/framework/float16.h"
