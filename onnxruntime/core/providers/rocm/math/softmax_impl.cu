@@ -74,15 +74,6 @@ void dispatch_warpwise_softmax_forward(hipStream_t stream, output_t* dst, const 
   }
 }
 
-#define SPECIALIZED_SOFTMAX_IMPL(input_t, output_t, acc_t)                                                                                                                                                      \
-  template void dispatch_warpwise_softmax_forward<input_t, output_t, acc_t, false>(hipStream_t stream, output_t * dst, const input_t* src, int softmax_elements, int softmax_elements_stride, int batch_count); \
-  template void dispatch_warpwise_softmax_forward<input_t, output_t, acc_t, true>(hipStream_t stream, output_t * dst, const input_t* src, int softmax_elements, int softmax_elements_stride, int batch_count);
-
-SPECIALIZED_SOFTMAX_IMPL(float, float, float)
-SPECIALIZED_SOFTMAX_IMPL(half, half, float)
-SPECIALIZED_SOFTMAX_IMPL(double, double, double)
-SPECIALIZED_SOFTMAX_IMPL(BFloat16, BFloat16, float)
-
 template <typename input_t, typename output_t, typename acc_t, bool is_log_softmax>
 void dispatch_blockwise_softmax_forward(hipStream_t stream, output_t* output, const input_t* input, int softmax_elements,
                                         int input_stride, int output_stride, int batch_count) {
@@ -100,7 +91,13 @@ void dispatch_blockwise_softmax_forward(hipStream_t stream, output_t* output, co
   }
 }
 
-#define SPECIALIZED_BLOCKWISE_SOFTMAX_IMPL(input_t, output_t, acc_t)                   \
+#define SPECIALIZED_SOFTMAX_IMPL(input_t, output_t, acc_t)                             \
+  template void dispatch_warpwise_softmax_forward<input_t, output_t, acc_t, false>(    \
+      hipStream_t stream, output_t * dst, const input_t* src, int softmax_elements,    \
+      int softmax_elements_stride, int batch_count);                                   \
+  template void dispatch_warpwise_softmax_forward<input_t, output_t, acc_t, true>(     \
+      hipStream_t stream, output_t * dst, const input_t* src, int softmax_elements,    \
+      int softmax_elements_stride, int batch_count);                                   \
   template void dispatch_blockwise_softmax_forward<input_t, output_t, acc_t, false>(   \
       hipStream_t stream, output_t * output, const input_t* src, int softmax_elements, \
       int input_stride, int output_stride, int batch_count);                           \
@@ -108,10 +105,10 @@ void dispatch_blockwise_softmax_forward(hipStream_t stream, output_t* output, co
       hipStream_t stream, output_t * output, const input_t* src, int softmax_elements, \
       int input_stride, int output_stride, int batch_count);
 
-SPECIALIZED_BLOCKWISE_SOFTMAX_IMPL(float, float, float)
-SPECIALIZED_BLOCKWISE_SOFTMAX_IMPL(half, half, float)
-SPECIALIZED_BLOCKWISE_SOFTMAX_IMPL(double, double, double)
-SPECIALIZED_BLOCKWISE_SOFTMAX_IMPL(BFloat16, BFloat16, float)
+SPECIALIZED_SOFTMAX_IMPL(float, float, float)
+SPECIALIZED_SOFTMAX_IMPL(half, half, float)
+SPECIALIZED_SOFTMAX_IMPL(double, double, double)
+SPECIALIZED_SOFTMAX_IMPL(BFloat16, BFloat16, float)
 
 }  // namespace rocm
 }  // namespace onnxruntime
